@@ -12,33 +12,13 @@ spring:
       client:
         composite-indicator:
           enabled: false
-
-management:
-  endpoint:
-    health:
-      probes:
-        enabled: true
-  health:
-    livenessState:
-      enabled: true
-    readinessState:
-      enabled: true
 my-application:
-  users:
-    - username: "admin"
-      password: "password"
-      roles:
-        - "READ"
-        - "WRITE"
-        - "DELETE"
-    - username: "dev"
-      password: "devPassword"
-      roles:
-        - "READ"
-    - username: "staging"
-      password: "stagingPassword"
-      roles:
-        - "WRITE"
+  items:
+    - "Item 1"
+    - "Item 2"
+    - "Item 3"
+    - "Item 4"
+    - "Item 5"
 ---
 spring:
   config:
@@ -46,11 +26,10 @@ spring:
       on-profile: dev
 
 my-application:
-  users:
-    - username: "dev"
-      password: "devPassword"
-      roles:
-        - "READ"
+  items:
+    - "Item 1"
+    - "Item 6"
+    - "Item 7"
 ---
 spring:
   config:
@@ -58,8 +37,5 @@ spring:
       on-profile: staging
 
 my-application:
-  users:
-    - username: "staging"
-      password: "stagingPassword"
-      roles:
-        - "WRITE"
+  items:
+    - "Item 8"

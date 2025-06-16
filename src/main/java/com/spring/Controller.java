@@ -12,11 +12,9 @@ public class Controller {
 
   @GetMapping("/")
   public String getConfigValues() {
-    config.getUsers().forEach(user -> {
-      System.out.println("UserName is " + user.getUsername());
-      System.out.println("Password is " + user.getPassword());
-      System.out.println("Number of Roles assigned is " + user.getRoles().size() + "\n");
+    config.getItems().forEach(x-> {
+      System.out.println("Item "+ x);
     });
-    return config.getUsers().toString();
+    return config.getItems().toString();
   }
 }

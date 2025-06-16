@@ -18,13 +18,10 @@ public class StagingConfigTest {
 
   @Test
   public void test_whenDefaultConfigLoads_thenAllConfigValueIsLoaded() {
-    List<Users> users = appConfig.getUsers();
+    List<String> items = appConfig.getItems();
 
-    assertThat(users.size()).isEqualTo(1);
-    assertThat(users.get(0).getRoles().size()).isEqualTo(1);
+    assertThat(items.size()).isEqualTo(1);
 
-    assertThat(users.get(0).getUsername()).isEqualTo("staging");
-    assertThat(users.get(0).getPassword()).isEqualTo("stagingPassword");
-    assertThat(users.get(0).getRoles().get(0)).isEqualTo("WRITE");
+    assertThat(items.get(0)).isEqualTo("Item 8");
   }
 }

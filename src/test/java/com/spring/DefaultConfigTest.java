@@ -18,13 +18,14 @@ public class DefaultConfigTest {
 
   @Test
   public void test_whenDefaultConfigLoads_thenAllConfigValueIsLoaded() {
-    List<Users> users = appConfig.getUsers();
+    List<String> items = appConfig.getItems();
 
-    assertThat(users.size()).isEqualTo(3);
-    assertThat(users.get(0).getRoles().size()).isEqualTo(3);
+    assertThat(items.size()).isEqualTo(5);
 
-    assertThat(users.get(0).getUsername()).isEqualTo("admin");
-    assertThat(users.get(1).getUsername()).isEqualTo("dev");
-    assertThat(users.get(2).getUsername()).isEqualTo("staging");
+    assertThat(items.get(0)).isEqualTo("Item 1");
+    assertThat(items.get(1)).isEqualTo("Item 2");
+    assertThat(items.get(2)).isEqualTo("Item 3");
+    assertThat(items.get(3)).isEqualTo("Item 4");
+    assertThat(items.get(4)).isEqualTo("Item 5");
   }
 }

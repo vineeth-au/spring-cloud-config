@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class AppConfig {
 
   private List<Users> users;
+  private List<String> items;
 
   @PostConstruct
   public void validateConfig() {

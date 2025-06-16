@@ -1,5 +1,5 @@
 externalReferences:
-  config-test: config-test
+  spring-config-map: spring-config-map
 
 deployment:
   spring-config-test:
