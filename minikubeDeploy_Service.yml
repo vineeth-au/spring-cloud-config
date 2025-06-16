@@ -17,6 +17,9 @@ spec:
           image: vineethmadhu/spring-config-test:latest
           ports:
             - containerPort: 8080
+          env:
+            - name: SPRING_APPLICATION_JSON
+              value: "{\n  \"spring\": {\n    \"application\": {\n      \"name\": \"spring-config-cm\"\n    },\n    \"cloud\": {\n      \"kubernetes\": {\n        \"config\": {\n          \"name\": \"config-test\",\n          \"sources\": [\n            {\n              \"name\": \"config-test\"\n            }\n          ]\n        }\n      }\n    },\n    \"profiles\": {\n      \"active\": \"dev,kubernetes\"\n    }\n  }\n}"
 ---
 apiVersion: v1
 kind: Service
@@ -34,6 +37,6 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: spring-config-test
+  name: spring-config-cm
 data:
   application.yaml: "spring:\n  profiles:\n    active: dev\n  main:\n    cloud-platform: kubernetes\n    allow-bean-definition-overriding: true\n  cloud:\n    kubernetes:\n      reload:\n        enabled: true\n    discovery:\n      client:\n        composite-indicator:\n          enabled: false\n\nmanagement:\n  endpoint:\n    health:\n      probes:\n        enabled: true\n  health:\n    livenessState:\n      enabled: true\n    readinessState:\n      enabled: true\nmy-application:\n  users:\n    - username: \"admin\"\n      password: \"password\"\n      roles:\n        - \"READ\"\n        - \"WRITE\"\n        - \"DELETE\"\n    - username: \"dev\"\n      password: \"devPassword\"\n      roles:\n        - \"READ\"\n    - username: \"staging\"\n      password: \"stagingPassword\"\n      roles:\n        - \"WRITE\"\n---\nspring:\n  config:\n    activate:\n      on-profile: dev\n\nmy-application:\n  users:\n    - username: \"dev\"\n      password: \"devPassword\"\n      roles:\n        - \"READ\"\n---\nspring:\n  config:\n    activate:\n      on-profile: staging\n\nmy-application:\n  users:\n    - username: \"staging\"\n      password: \"stagingPassword\"\n      roles:\n        - \"WRITE\"\n"
