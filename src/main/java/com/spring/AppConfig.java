@@ -15,21 +15,10 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "my-application")
 public class AppConfig {
 
-  private List<Users> users;
   private List<String> items;
 
   @PostConstruct
   public void validateConfig() {
-    System.out.println("App Config {}"+ toString());
-  }
-
-  @Getter
-  @Setter
-  @ToString
-  public static class Users {
-
-    private String username;
-    private String password;
-    private List<String> roles;
+    System.out.println("App Config {}" + toString());
   }
 }

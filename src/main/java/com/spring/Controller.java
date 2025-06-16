@@ -12,9 +12,7 @@ public class Controller {
 
   @GetMapping("/")
   public String getConfigValues() {
-    config.getItems().forEach(x-> {
-      System.out.println("Item "+ x);
-    });
+    config.getItems().forEach(System.out::println);
     return config.getItems().toString();
   }
 }
