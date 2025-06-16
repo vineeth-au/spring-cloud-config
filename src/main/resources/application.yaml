@@ -1,3 +1,16 @@
+spring:
+  main:
+    cloud-platform: kubernetes
+    allow-bean-definition-overriding: true
+  cloud:
+    kubernetes:
+      reload:
+        enabled: true
+    discovery:
+      client:
+        composite-indicator:
+          enabled: false
+
 management:
   endpoint:
     health:
@@ -8,7 +21,6 @@ management:
       enabled: true
     readinessState:
       enabled: true
-
 my-application:
   users:
     - username: "admin"
