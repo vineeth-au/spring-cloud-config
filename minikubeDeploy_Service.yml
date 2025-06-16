@@ -44,6 +44,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: spring-config-cm
+  labels:
+    app: "spring-config-test"
+    component: "spring"
 data:
   application.yaml: "spring:\n  profiles:\n    active: dev\n  main:\n    cloud-platform: kubernetes\n    allow-bean-definition-overriding: true\n  cloud:\n    kubernetes:\n      reload:\n        enabled: true\n    discovery:\n      client:\n        composite-indicator:\n          enabled: false\n\nmanagement:\n  endpoint:\n    health:\n      probes:\n        enabled: true\n  health:\n    livenessState:\n      enabled: true\n    readinessState:\n      enabled: true\nmy-application:\n  users:\n    - username: \"admin\"\n      password: \"password\"\n      roles:\n        - \"READ\"\n        - \"WRITE\"\n        - \"DELETE\"\n    - username: \"dev\"\n      password: \"devPassword\"\n      roles:\n        - \"READ\"\n    - username: \"staging\"\n      password: \"stagingPassword\"\n      roles:\n        - \"WRITE\"\n---\nspring:\n  config:\n    activate:\n      on-profile: dev\n\nmy-application:\n  users:\n    - username: \"dev\"\n      password: \"devPassword\"\n      roles:\n        - \"READ\"\n---\nspring:\n  config:\n    activate:\n      on-profile: staging\n\nmy-application:\n  users:\n    - username: \"staging\"\n      password: \"stagingPassword\"\n      roles:\n        - \"WRITE\"\n"
 ---
@@ -51,6 +54,9 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: spring-config-test
+  labels:
+    app: "spring-config-test"
+    component: "spring-config-test"
 rules:
   - apiGroups:
       - ""
@@ -65,6 +71,9 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: spring-config-test
+  labels:
+    app: "spring-config-test"
+    component: "spring-config-test"
 subjects:
   - kind: ServiceAccount
     name: spring-config-test
@@ -72,6 +81,7 @@ subjects:
 roleRef:
   kind: Role
   name: spring-config-test
+  apiGroup: ""
 ---
 #kind: ClusterRoleBinding
 #apiVersion: rbac.authorization.k8s.io/v1
