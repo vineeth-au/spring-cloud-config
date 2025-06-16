@@ -1,6 +1,0 @@
-my-application:
-  users:
-    - username: "dev"
-      password: "devPassword"
-      roles:
-        - "READ"

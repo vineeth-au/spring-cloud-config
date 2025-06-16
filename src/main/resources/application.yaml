@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   main:
     cloud-platform: kubernetes
     allow-bean-definition-overriding: true
@@ -33,6 +35,30 @@ my-application:
       password: "devPassword"
       roles:
         - "READ"
+    - username: "staging"
+      password: "stagingPassword"
+      roles:
+        - "WRITE"
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+my-application:
+  users:
+    - username: "dev"
+      password: "devPassword"
+      roles:
+        - "READ"
+---
+spring:
+  config:
+    activate:
+      on-profile: staging
+
+my-application:
+  users:
     - username: "staging"
       password: "stagingPassword"
       roles:

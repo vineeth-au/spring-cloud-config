@@ -15,9 +15,6 @@ spec:
       containers:
         - name: spring-config-test
           image: vineethmadhu/spring-config-test:latest
-          env:
-            - name: spring_profiles_active
-              value: dev
           ports:
             - containerPort: 8080
 ---
@@ -33,4 +30,10 @@ spec:
       port: 80
       targetPort: 8080
   type: NodePort
-  
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spring-config-test
+data:
+  application.yaml: "spring:\n  profiles:\n    active: dev\n  main:\n    cloud-platform: kubernetes\n    allow-bean-definition-overriding: true\n  cloud:\n    kubernetes:\n      reload:\n        enabled: true\n    discovery:\n      client:\n        composite-indicator:\n          enabled: false\n\nmanagement:\n  endpoint:\n    health:\n      probes:\n        enabled: true\n  health:\n    livenessState:\n      enabled: true\n    readinessState:\n      enabled: true\nmy-application:\n  users:\n    - username: \"admin\"\n      password: \"password\"\n      roles:\n        - \"READ\"\n        - \"WRITE\"\n        - \"DELETE\"\n    - username: \"dev\"\n      password: \"devPassword\"\n      roles:\n        - \"READ\"\n    - username: \"staging\"\n      password: \"stagingPassword\"\n      roles:\n        - \"WRITE\"\n---\nspring:\n  config:\n    activate:\n      on-profile: dev\n\nmy-application:\n  users:\n    - username: \"dev\"\n      password: \"devPassword\"\n      roles:\n        - \"READ\"\n---\nspring:\n  config:\n    activate:\n      on-profile: staging\n\nmy-application:\n  users:\n    - username: \"staging\"\n      password: \"stagingPassword\"\n      roles:\n        - \"WRITE\"\n"
