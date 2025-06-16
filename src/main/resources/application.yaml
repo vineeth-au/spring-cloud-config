@@ -1,6 +1,6 @@
 spring:
-#  profiles:
-#    active: dev
+  application:
+    name: "my-spring-config-test-app"
   main:
     cloud-platform: kubernetes
     allow-bean-definition-overriding: true
