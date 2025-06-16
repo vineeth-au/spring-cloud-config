@@ -43,7 +43,7 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: spring-config-cm
+  name: spring-config-test
   labels:
     app: "spring-config-test"
     component: "spring"
