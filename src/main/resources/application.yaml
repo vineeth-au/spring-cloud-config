@@ -1,0 +1,27 @@
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+my-application:
+  users:
+    - username: "admin"
+      password: "password"
+      roles:
+        - "READ"
+        - "WRITE"
+        - "DELETE"
+    - username: "dev"
+      password: "devPassword"
+      roles:
+        - "READ"
+    - username: "staging"
+      password: "stagingPassword"
+      roles:
+        - "WRITE"

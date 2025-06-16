@@ -1,0 +1,6 @@
+my-application:
+  users:
+    - username: "staging"
+      password: "stagingPassword"
+      roles:
+        - "WRITE"
