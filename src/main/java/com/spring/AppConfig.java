@@ -19,6 +19,6 @@ public class AppConfig {
 
   @PostConstruct
   public void validateConfig() {
-    System.out.println("App Config {}" + toString());
+    System.out.println("App Config {}" + this);
   }
 }
