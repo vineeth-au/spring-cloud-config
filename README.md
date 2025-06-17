@@ -64,11 +64,63 @@ This is a minimal, reproducible example that showcases this exact problem. You c
 ```shell
   k apply -f minikube.yaml
 ```
-PS: My miniKube's overly permissive `cluster-admin` `ClusterRoleBinding` was bound to the `system:serviceaccounts` group. This resulted in all service accounts in my default cluster having `cluster-admin` privileges. Since it's just a miniKube I ended up doing this 
+PS: My miniKube's overly permissive `cluster-admin` `ClusterRoleBinding` was bound to the `system:serviceaccounts` group. This resulted in all service accounts in my default cluster having `cluster-admin` privileges. Since it's just a miniKube I ended up doing this
+> [!WARNING]
+> Do not do this in your actual cluster.
 ```shell
   k create clusterrolebinding serviceaccounts-cluster-admin --clusterrole=cluster-admin --group=system:serviceaccounts
 ```
-> [!WARNING]
-> Do not do this in your actual cluster.
+
+### Log Comparison 
+I am attaching the logs below to 
+
+```log
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.3.12)
+
+2025-06-17T13:02:32.744-04:00  INFO 19610 --- [my-spring-config-test-app] [           main] com.spring.Application                   : The following 1 profile is active: "dev"
+2025-06-17T13:02:32.964-04:00  INFO 19610 --- [my-spring-config-test-app] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=6d19df4a-28eb-321a-8361-5e088fa4a504
+2025-06-17T13:02:32.984-04:00  WARN 19610 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-17T13:02:32.985-04:00  WARN 19610 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-06-17T13:02:32.985-04:00  WARN 19610 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-17T13:02:32.986-04:00  WARN 19610 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-06-17T13:02:32.986-04:00  WARN 19610 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+App Config {}AppConfig(items=[Item 1, Item 6, Item 7])
+2025-06-17T13:02:33.600-04:00  WARN 19610 --- [my-spring-config-test-app] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2025-06-17T13:02:33.651-04:00  INFO 19610 --- [my-spring-config-test-app] [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port 8080 (http)
+2025-06-17T13:02:33.664-04:00  INFO 19610 --- [my-spring-config-test-app] [           main] com.spring.Application                   : Started Application in 1.253 seconds (process running for 1.395)
+
+```
+
+
+```log
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v3.3.12)
+2025-06-17T16:14:27.038Z  INFO 1 --- [my-spring-config-test-app] [           main] b.c.PropertySourceBootstrapConfiguration : Located property source: [BootstrapPropertySource {name='bootstrapProperties-configmap.spring-config-map.default'}]
+2025-06-17T16:14:27.044Z  INFO 1 --- [my-spring-config-test-app] [           main] com.spring.Application                   : The following 2 profiles are active: "dev", "kubernetes"
+2025-06-17T16:14:27.809Z  INFO 1 --- [my-spring-config-test-app] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=c2696e75-ac9f-3490-bf1e-214fc8dc92ae
+2025-06-17T16:14:27.835Z  WARN 1 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-17T16:14:27.836Z  WARN 1 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-06-17T16:14:27.837Z  WARN 1 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-17T16:14:27.837Z  WARN 1 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-06-17T16:14:27.838Z  WARN 1 --- [my-spring-config-test-app] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+App Config {}AppConfig(items=[Item 1, Item 6, Item 7, Item 4, Item 5])
+2025-06-17T16:14:28.528Z  WARN 1 --- [my-spring-config-test-app] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2025-06-17T16:14:28.646Z  INFO 1 --- [my-spring-config-test-app] [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port 8080 (http)
+2025-06-17T16:14:28.707Z  INFO 1 --- [my-spring-config-test-app] [           main] com.spring.Application                   : Started Application in 3.428 seconds (process running for 3.971)
+```
+
 
 The goal here is to provide a clear, isolated test case that can help identify the root cause of this issue and potentially find a workaround or solution. Whether this is a Spring Boot bug, a Kubernetes-specific behavior, or something related to how configuration files are loaded in containerized environments, this repository should help get to the bottom of it.

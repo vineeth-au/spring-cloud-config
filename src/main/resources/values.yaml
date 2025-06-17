@@ -1,8 +1,0 @@
-externalReferences:
-  spring-config-map: spring-config-map
-
-deployment:
-  spring-config-test:
-    springCloud:
-      configMaps:
-        - spring
