@@ -36,7 +36,7 @@ action1:
 When running locally: Everything works perfectly! You get exactly what you expect: `["Item 1", "Item 6", "Item 7"]`.
 However, when running on Kubernetes instead of the expected override behavior, you get what appears to be a merge of both configurations: `["Item 1", "Item 6", "Item 7", "Item 4", "Item 5"]`.
 
-Notice how `Items 4` and `Item 5` from the base configuration, and they somehow sneak their way back into the final result, even though they should have been completely replaced by the profile-specific configuration.
+Notice how `Items 4` and `Item 5` managed to sneak their way into the dev profile.
 
 ### Why This Matters
 This inconsistency between local and Kubernetes deployments can cause some serious headaches:
@@ -51,20 +51,22 @@ This inconsistency between local and Kubernetes deployments can cause some serio
 ```shell
   mvn clean install
 ```
-2. Run the application locally to see how it should behave. This project includes `default`, `dev` & `staging` for testing. 
+2. Run the application locally to see how it should behave. This project includes `default`, `dev` & `staging` profiles for testing. 
 ```shell
   mvn spring-boot:run -Dspring-boot.run.profiles="dev" 
 ```  
-3. When the application starts up, you should see something like `AppConfig(items=[Item 1, Item 6, Item 7])`. This shows that the configuration is working exactly as expected - the dev profile configuration has completely overridden the base configuration, giving us exactly 3 items in our list.
+3. When the application starts up and assuming the profie selected is `dev`, you should see something like `AppConfig(items=[Item 1, Item 6, Item 7])`. This shows that the configuration is working exactly as expected - the dev profile has completely overridden the base `applicaiton.yaml`.
 4. Here's where things get weird. Let's deploy the exact same application to a Kubernetes cluster and see what happens. For this example, I'm using `minikube`.
 ```shell
   k apply -f minikube.yaml
 ```
 This will create all the necessary Kubernetes resources (deployment, service, etc.).
 
-PS: My miniKube's overly permissive `cluster-admin` `ClusterRoleBinding` was bound to the `system:serviceaccounts` group. This resulted in all service accounts in my default cluster having `cluster-admin` privileges. Since it's just a miniKube I ended up doing this
+PS: My miniKube's overly permissive `cluster-admin` `ClusterRoleBinding` was bound to the `system:serviceaccounts` group. This resulted in all service accounts in my default cluster having `cluster-admin` privileges. Since it's miniKube I ended up doing this
+
 > [!WARNING]
 > Do not do this in your actual cluster.
+
 ```shell
   k create clusterrolebinding serviceaccounts-cluster-admin --clusterrole=cluster-admin --group=system:serviceaccounts
 ```
@@ -125,5 +127,5 @@ App Config {}AppConfig(items=[Item 1, Item 6, Item 7, Item 4, Item 5])
 2025-06-17T16:14:28.707Z  INFO 1 --- [my-spring-config-test-app] [           main] com.spring.Application                   : Started Application in 3.428 seconds (process running for 3.971)
 ```
 
-### What This Repo Demonstrates
-This is a minimal, reproducible example that showcases this exact problem. You can clone this repo, run it locally to see the "correct" behavior, then deploy it to a Kubernetes cluster to witness the configuration merging weirdness firsthand. The goal here is to provide a clear, isolated test case that can help identify the root cause of this issue and potentially find a workaround or solution.
+### What This Demonstrates
+This is a minimal, reproducible example that showcases the issue. You can clone this repo, run it locally to see the "correct" behavior, then deploy it to a Kubernetes cluster to witness the configuration merging weirdness firsthand. The goal here is to provide a clear, isolated test case that can help identify the root cause of this issue and potentially find a solution.
